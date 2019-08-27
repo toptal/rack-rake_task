@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 require 'shellwords'
+require 'securerandom'
+require 'json'
 
-# TODO: refactor this class
 module Rack
   class RakeTask
     def initialize(app)
@@ -11,21 +12,39 @@ module Rack
 
     def call(env)
       if env['REQUEST_PATH'] == '/rake_task'
-        params = Rack::Utils.parse_nested_query(env['QUERY_STRING'])
-        pid = Process.spawn(
-          "bundle exec ./bin/rake #{::Shellwords.escape(params['task'])}",
-          unsetenv_others: true,
-          %i[out err] => ['/tmp/rake_middleware', 'w']
-        )
-        _pid, status = Process.wait2(pid)
-        http_code = status.exitstatus.zero? ? 200 : 500
+        task = Rack::Utils.parse_nested_query(env['QUERY_STRING'])['task']
+        response = execute_task(task)
+        http_code = response['exit_code'].zero? ? 200 : 400
 
-        response_string = ::File.read('/tmp/rake_middleware')
-
-        return [http_code, {}, [response_string]]
+        return [http_code, { 'Content-Type' => 'application/json' }, [response.to_json]]
       end
 
       @app.call(env)
+    end
+
+    private
+
+    def execute_task(task)
+      log_prefix = SecureRandom.hex
+      output_log = "/tmp/rake_middleware_#{log_prefix}_out"
+      error_log = "/tmp/rake_middleware_#{log_prefix}_err"
+
+      pid = Process.spawn(
+        "bundle exec ./bin/rake #{::Shellwords.escape(task)}",
+        unsetenv_others: true,
+        out: [output_log, 'w'],
+        err: [error_log, 'w']
+      )
+      _pid, status = Process.wait2(pid)
+
+      output = ::File.read(output_log)
+      error = ::File.read(error_log)
+
+      {
+        'output' => output,
+        'error' => error,
+        'exit_code' => status.exitstatus
+      }
     end
   end
 end

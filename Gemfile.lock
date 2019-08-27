@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     rack-rails_task (0.0.1)
+      faraday
 
 GEM
   remote: https://rubygems.org/
@@ -49,7 +50,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  faraday
   pry
   rack-rails_task!
   rake

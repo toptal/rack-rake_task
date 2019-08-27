@@ -15,7 +15,8 @@ Gem::Specification.new do |s|
   s.files        = Dir['README.md', 'lib/**/*.rb']
   s.require_path = 'lib'
 
-  s.add_development_dependency 'faraday'
+  s.add_dependency 'faraday'
+
   s.add_development_dependency 'pry'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec'

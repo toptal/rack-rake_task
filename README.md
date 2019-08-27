@@ -1,4 +1,4 @@
-# WORK IN PROGRESS !!
+# Usage
 
 ```ruby
 # Gemfile
@@ -10,8 +10,20 @@ end
 require 'rack/rake_task'
 config.middleware.use Rack::RakeTask
 ```
+
 Now `rake` tasks can be executed over HTTP:
-http://localhost:3000/rake_task?task=db:reset
+
+```shell
+curl -X GET "http://localhost:3000/rake_task?task=db:reset"
+```
+
+```ruby
+response = Rack::RakeTaskClient.new('http://localhost:3000').task('db:reset')
+
+response['output']     # contents of STDOUT from rake task execution
+response['error']      # contents of STDERR from rake task execution
+response['exit_code']  # POSIX exit code from rake task execution
+```
 
 This is useful in a CI stack, for example: to reset the database between test scenarios.
 
@@ -33,10 +45,4 @@ bundle install
 bundle exec rails s
 ```
 
-**REMEMBER:** Always restart the rails app to make the changes made to the middleware effective.
-
-# TODOs
-
-* [ ] Return a JSON with error and output fields
-* [ ] Refactor the middleware class
-* [ ] Improve spec coverage
+**REMEMBER:** During development always restart the rails app to make the changes made to the middleware effective.

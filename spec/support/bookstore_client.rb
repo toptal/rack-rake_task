@@ -14,8 +14,4 @@ class BookstoreClient
   def delete_book(id)
     Faraday.delete("#{@url}/books/#{id}")
   end
-
-  def rake_db_reset
-    Faraday.delete("#{@url}/rake_task?task=db:reset")
-  end
 end
