@@ -7,6 +7,6 @@ Documentation:
 Metrics/BlockLength:
   ExcludedMethods: ['describe', 'context', 'configure']
 Metrics/MethodLength:
-  Max: 18
+  Max: 15
 Metrics/LineLength:
   Max: 90

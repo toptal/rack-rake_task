@@ -37,12 +37,9 @@ module Rack
       )
       _pid, status = Process.wait2(pid)
 
-      output = ::File.read(output_log)
-      error = ::File.read(error_log)
-
       {
-        'output' => output,
-        'error' => error,
+        'output' => ::File.read(output_log),
+        'error' => ::File.read(error_log),
         'exit_code' => status.exitstatus
       }
     end
