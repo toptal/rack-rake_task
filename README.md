@@ -13,11 +13,15 @@ config.middleware.use Rack::RakeTask
 
 Now `rake` tasks can be executed over HTTP:
 
+Shell:
 ```shell
 curl -X GET "http://localhost:3000/rake_task?task=db:reset"
 ```
 
+Ruby:
 ```ruby
+require 'rack/rake_task_client'
+
 response = Rack::RakeTaskClient.new('http://localhost:3000').task('db:reset')
 
 response['output']     # contents of STDOUT from rake task execution

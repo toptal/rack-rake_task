@@ -13,6 +13,7 @@ RSpec.describe Rack::RakeTask do
     before { rake_client.task('db:reset') }
 
     specify do
+      # there are 2 books in seeds.rb (initial DB state)
       expect(app_client.data.count).to eq(2)
       app_client.delete_book(1)
       expect(app_client.data.count).to eq(1)
