@@ -1,0 +1,12 @@
+owner:
+  name: "Task Force: System Testing of Services"
+  url: "https://toptal-core.atlassian.net/wiki/spaces/QG/pages/463994944/TF+System+Testing+of+Services"
+  channel: "#tf-system-testing"
+
+app:
+  production:
+  staging:
+
+technology:
+  - ruby
+
